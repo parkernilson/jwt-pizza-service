@@ -3,3 +3,6 @@
 config.js
 coverage
 dist
+
+.env
+.mysql/
