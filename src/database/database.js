@@ -347,6 +347,17 @@ class DB {
     const [rows] = await connection.execute(`SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?`, [config.db.connection.database]);
     return rows.length > 0;
   }
+
+  async reset() {
+    const connection = await this._getConnection();
+    await this._reset(connection);
+    connection.end();
+  }
+
+  async _reset(connection) {
+    await connection.execute(`DROP DATABASE IF EXISTS ${config.db.connection.database}`);
+    await this.initializeDatabase();
+  }
 }
 
 const db = new DB();
