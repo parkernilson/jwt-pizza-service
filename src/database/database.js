@@ -322,6 +322,7 @@ class DB {
       const connection = await this._getConnection(false);
       try {
         const dbExists = await this.checkDatabaseExists(connection);
+        console.log(dbExists ? 'Database exists' : 'Database does not exist');
 
         await connection.query(`CREATE DATABASE IF NOT EXISTS ${config.db.connection.database}`);
         await connection.query(`USE ${config.db.connection.database}`);
