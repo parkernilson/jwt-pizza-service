@@ -7,8 +7,9 @@
     "start": "cd src && node index.js",
     "test": "jest",
     "lint": "eslint",
-    "db:start": "source .env && docker run --name jwt-pizza-mysql -e MYSQL_ROOT_PASSWORD=$JWT_PIZZA_MYSQL_PASSWORD -p 3306:3306 -d -v ./.mysql/data:/var/lib/mysql -d mysql",
-    "db:stop": "docker kill jwt-pizza-mysql"
+    "db:start": "source .env && docker run --name jwt-pizza-mysql -e MYSQL_ROOT_PASSWORD=$JWT_PIZZA_MYSQL_PASSWORD -p 3306:3306 -d mysql",
+    "db:stop": "docker kill jwt-pizza-mysql && docker rm jwt-pizza-mysql",
+    "db:restart": "npm run db:stop && npm run db:start"
   },
   "license": "MIT",
   "dependencies": {

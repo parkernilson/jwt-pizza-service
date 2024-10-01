@@ -349,14 +349,21 @@ class DB {
   }
 
   async reset() {
-    const connection = await this._getConnection(false);
-    await this._reset(connection);
-    await connection.end();
-  }
-
-  async _reset(connection) {
-    await connection.execute(`DROP DATABASE IF EXISTS ${config.db.connection.database}`);
-    await this.initializeDatabase();
+    const connection = await this.getConnection();
+    try {
+      await this.query(connection, `SET FOREIGN_KEY_CHECKS = 0`);
+      await this.query(connection, `TRUNCATE TABLE store`)
+      await this.query(connection, `TRUNCATE TABLE franchise`)
+      await this.query(connection, `TRUNCATE TABLE userRole`)
+      await this.query(connection, `TRUNCATE TABLE user`)
+      await this.query(connection, `TRUNCATE TABLE auth`)
+      await this.query(connection, `TRUNCATE TABLE menu`)
+      await this.query(connection, `TRUNCATE TABLE orderItem`)
+      await this.query(connection, `TRUNCATE TABLE dinerOrder`)
+      await this.query(connection, `SET FOREIGN_KEY_CHECKS = 1`);
+    } finally {
+      connection.end();
+    } 
   }
 }
 

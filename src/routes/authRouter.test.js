@@ -8,9 +8,7 @@ let testUserId;
 
 beforeEach(async () => {
   try {
-    // clear the database
-    await DB.reset()
-
+    await DB.reset();
     testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
     const registerRes = await request(app).post('/api/auth').send(testUser);
     testUserAuthToken = registerRes.body.token;
