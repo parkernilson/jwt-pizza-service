@@ -59,7 +59,7 @@ franchiseRouter.endpoints = [
 franchiseRouter.get(
   '/',
   asyncHandler(async (req, res) => {
-    res.json(await DB.getFranchises(req.user));
+    return res.json(await DB.getFranchises(req.user));
   })
 );
 
