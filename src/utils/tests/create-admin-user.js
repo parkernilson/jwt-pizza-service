@@ -1,5 +1,5 @@
-const { Role, DB } = require('../database/database.js');
-const { randomName } = require('../utils/random-name.js');
+const { Role, DB } = require('../../database/database.js');
+const { randomName } = require('./random-name.js');
 
 async function createAdminUser() {
   let user = { password: 'toomanysecrets', roles: [{ role: Role.Admin }] };
