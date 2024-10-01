@@ -7,13 +7,17 @@ let testUserAuthToken;
 let testUserId;
 
 beforeEach(async () => {
-  // clear the database
-  await DB.reset()
+  try {
+    // clear the database
+    await DB.reset()
 
-  testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
-  const registerRes = await request(app).post('/api/auth').send(testUser);
-  testUserAuthToken = registerRes.body.token;
-  testUserId = registerRes.body.user.id;
+    testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
+    const registerRes = await request(app).post('/api/auth').send(testUser);
+    testUserAuthToken = registerRes.body.token;
+    testUserId = registerRes.body.user.id;
+  } catch(e) {
+    console.log(e);
+  }
 })
 
 test('register', async () => {
