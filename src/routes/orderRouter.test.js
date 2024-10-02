@@ -7,7 +7,6 @@ const { randomIntId } = require("../utils/tests/random-int-id");
 let testUser1;
 let testUser1Password = "secret$123";
 let loginResUser1;
-let adminUser1;
 let adminUser1Password = "admin$123";
 let loginResAdmin1;
 let connection;
@@ -41,7 +40,7 @@ beforeEach(async () => {
     });
     const admin1Name = randomName();
     const admin1Email = admin1Name + "@admin.com";
-    const addAdminRes = await DB.addUser({
+    await DB.addUser({
       name: admin1Name,
       email: admin1Email,
       password: adminUser1Password,
@@ -51,7 +50,6 @@ beforeEach(async () => {
       email: admin1Email,
       password: adminUser1Password,
     });
-    adminUser1 = loginResAdmin1.body;
 
     // Seed data
     franchise1Id = randomIntId();
@@ -125,7 +123,7 @@ test("Should add an item to the menu", async () => {
     image: "image",
     price: 0.05
   }
-  const addMenuItemRes = await request(app)
+  await request(app)
     .put("/api/order/menu")
     .send(newItem)
     .set("Authorization", `Bearer ${loginResAdmin1.body.token}`);

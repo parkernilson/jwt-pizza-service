@@ -8,9 +8,7 @@ const { StatusCodeError } = require("../endpointHelper");
 let testUser1;
 let testUser1Password = "secret$123";
 let loginResUser1;
-let adminUser1;
 let adminUser1Password = "admin$123";
-let loginResAdmin1;
 let connection;
 let franchise1Id;
 let franchise1Name;
@@ -42,17 +40,12 @@ beforeEach(async () => {
     });
     const admin1Name = randomName();
     const admin1Email = admin1Name + "@admin.com";
-    const addAdminRes = await DB.addUser({
+    await DB.addUser({
       name: admin1Name,
       email: admin1Email,
       password: adminUser1Password,
       roles: [{ role: "admin" }],
     });
-    loginResAdmin1 = await request(app).put("/api/auth").send({
-      email: admin1Email,
-      password: adminUser1Password,
-    });
-    adminUser1 = loginResAdmin1.body;
 
     // Seed data
     franchise1Id = randomIntId();

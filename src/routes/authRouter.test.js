@@ -5,7 +5,6 @@ const { randomName } = require("../utils/tests/random-name");
 
 let testUser1;
 let testUser1Password = "secret$123";
-let adminUser1;
 let adminUser1Password = "admin$123";
 
 beforeAll(() => {
@@ -24,17 +23,12 @@ beforeEach(async () => {
     testUser1 = registerUser1.body;
     const admin1Name = randomName();
     const admin1Email = admin1Name + "@admin.com";
-    const addAdminRes = await DB.addUser({
+    await DB.addUser({
       name: admin1Name,
       email: admin1Email,
       password: adminUser1Password,
       roles: [{ role: "admin" }],
     });
-    const loginAdmin1Res = await request(app).put("/api/auth").send({
-      email: admin1Email,
-      password: adminUser1Password,
-    });
-    adminUser1 = loginAdmin1Res.body;
   } catch (e) {
     console.log(e);
   }

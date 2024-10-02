@@ -3,7 +3,6 @@ const app = require("../service");
 const { DB, Role } = require("../database/database");
 const { randomName } = require("../utils/tests/random-name");
 const { randomIntId } = require("../utils/tests/random-int-id");
-const e = require("express");
 
 let testUser1;
 let testUser1Password = "secret$123";
@@ -36,7 +35,7 @@ beforeEach(async () => {
     });
     const admin1Name = randomName();
     const admin1Email = admin1Name + "@admin.com";
-    const addAdminRes = await DB.addUser({
+    await DB.addUser({
       name: admin1Name,
       email: admin1Email,
       password: adminUser1Password,
