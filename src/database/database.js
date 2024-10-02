@@ -71,7 +71,7 @@ class DB {
 
       return { ...user, roles: roles, password: undefined };
     } finally {
-      connection.end();
+      await connection.end();
     }
   }
 
@@ -102,7 +102,7 @@ class DB {
     try {
       await this.query(connection, `INSERT INTO auth (token, userId) VALUES (?, ?)`, [token, userId]);
     } finally {
-      connection.end();
+      await connection.end();
     }
   }
 
@@ -232,7 +232,7 @@ class DB {
       }
       return franchises;
     } finally {
-      connection.end();
+      await connection.end();
     }
   }
 
@@ -249,7 +249,7 @@ class DB {
 
       return franchise;
     } finally {
-      connection.end();
+      await connection.end();
     }
   }
 
@@ -348,23 +348,6 @@ class DB {
     return rows.length > 0;
   }
 
-  async reset() {
-    const connection = await this.getConnection();
-    try {
-      await this.query(connection, `SET FOREIGN_KEY_CHECKS = 0`);
-      await this.query(connection, `TRUNCATE TABLE store`)
-      await this.query(connection, `TRUNCATE TABLE franchise`)
-      await this.query(connection, `TRUNCATE TABLE userRole`)
-      await this.query(connection, `TRUNCATE TABLE user`)
-      await this.query(connection, `TRUNCATE TABLE auth`)
-      await this.query(connection, `TRUNCATE TABLE menu`)
-      await this.query(connection, `TRUNCATE TABLE orderItem`)
-      await this.query(connection, `TRUNCATE TABLE dinerOrder`)
-      await this.query(connection, `SET FOREIGN_KEY_CHECKS = 1`);
-    } finally {
-      connection.end();
-    } 
-  }
 }
 
 const db = new DB();
