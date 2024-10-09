@@ -71,7 +71,7 @@ class DB {
 
       return { ...user, roles: roles, password: undefined };
     } finally {
-      await connection.end();
+      connection.end();
     }
   }
 
@@ -102,7 +102,7 @@ class DB {
     try {
       await this.query(connection, `INSERT INTO auth (token, userId) VALUES (?, ?)`, [token, userId]);
     } finally {
-      await connection.end();
+      connection.end();
     }
   }
 
@@ -232,7 +232,7 @@ class DB {
       }
       return franchises;
     } finally {
-      await connection.end();
+      connection.end();
     }
   }
 
@@ -249,7 +249,7 @@ class DB {
 
       return franchise;
     } finally {
-      await connection.end();
+      connection.end();
     }
   }
 
@@ -333,10 +333,10 @@ class DB {
 
         if (!dbExists) {
           const defaultAdmin = { name: '常用名字', email: 'a@jwt.com', password: 'admin', roles: [{ role: Role.Admin }] };
-          await this.addUser(defaultAdmin);
+          this.addUser(defaultAdmin);
         }
       } finally {
-        await connection.end();
+        connection.end();
       }
     } catch (err) {
       console.error(JSON.stringify({ message: 'Error initializing database', exception: err.message, connection: config.db.connection }));
