@@ -134,7 +134,9 @@ export class JwtPizzaServiceStack extends cdk.Stack {
       securityGroups: [dbSg],
       databaseName: "pizza",
       instanceIdentifier: "jwt-pizza-service-db",
-      credentials: rds.Credentials.fromGeneratedSecret("admin"),
+      credentials: rds.Credentials.fromGeneratedSecret("admin", {
+        excludeCharacters: '"@/\\\'[]{}:,+%~`$&*?|><;=()!#^-'
+      }),
       publiclyAccessible: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       deletionProtection: false,
@@ -237,6 +239,8 @@ export class JwtPizzaServiceStack extends cdk.Stack {
       desiredCount: 1,
       assignPublicIp: false,
       serviceName: pizzaServiceServiceName,
+      securityGroups: [pizzaServiceSg],
+      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }
     });
 
     // Create a new certificate
