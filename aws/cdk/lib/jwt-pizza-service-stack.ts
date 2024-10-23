@@ -17,6 +17,9 @@ export class JwtPizzaServiceStack extends cdk.Stack {
     const githubUsername = "parkernilson";
     const githubRepoName = "jwt-pizza-service";
 
+    const pizzaServiceClusterName = "jwt-pizza-service";
+    const pizzaServiceServiceName = "jwt-pizza-service";
+
     // Create VPC with both public and private subnets
     const vpc = new ec2.Vpc(this, "JwtPizzaVpc", {
       maxAzs: 2,
@@ -201,10 +204,7 @@ export class JwtPizzaServiceStack extends cdk.Stack {
         sid: "PassRolesInTaskDefinition",
         effect: iam.Effect.ALLOW,
         actions: ["iam:PassRole"],
-        resources: [
-          taskExecutionRole.roleArn,
-          taskDefinition.taskRole.roleArn
-        ],
+        resources: [taskExecutionRole.roleArn, taskDefinition.taskRole.roleArn],
       })
     );
 
@@ -214,7 +214,10 @@ export class JwtPizzaServiceStack extends cdk.Stack {
     });
 
     // Create ECS Cluster
-    const cluster = new ecs.Cluster(this, "JwtPizzaServiceCluster", { vpc });
+    const cluster = new ecs.Cluster(this, "JwtPizzaServiceCluster", {
+      vpc,
+      clusterName: pizzaServiceClusterName,
+    });
 
     // Create ECS Service
     const ecsService = new ecs.FargateService(this, "JwtPizzaServiceService", {
@@ -222,6 +225,7 @@ export class JwtPizzaServiceStack extends cdk.Stack {
       taskDefinition,
       desiredCount: 1,
       assignPublicIp: false,
+      serviceName: pizzaServiceServiceName,
     });
 
     // Create a new certificate
