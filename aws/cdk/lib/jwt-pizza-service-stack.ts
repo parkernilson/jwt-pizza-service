@@ -6,6 +6,7 @@ import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import * as logs from 'aws-cdk-lib/aws-logs'
 import { Construct } from "constructs";
 
 export class JwtPizzaServiceStack extends cdk.Stack {
@@ -131,7 +132,7 @@ export class JwtPizzaServiceStack extends cdk.Stack {
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
       securityGroups: [dbSg],
-      databaseName: "jwt_pizza_service_db",
+      databaseName: "pizza",
       instanceIdentifier: "jwt-pizza-service-db",
       credentials: rds.Credentials.fromGeneratedSecret("admin"),
       publiclyAccessible: false,
@@ -208,9 +209,19 @@ export class JwtPizzaServiceStack extends cdk.Stack {
       })
     );
 
+    // Create a log group for the ECS task
+    const logGroup = new ecs.AwsLogDriver({
+      streamPrefix: "jwt-pizza-service",
+      logGroup: new logs.LogGroup(this, "JwtPizzaServiceLogGroup", {
+        logGroupName: "/ecs/jwt-pizza-service",
+        removalPolicy: cdk.RemovalPolicy.DESTROY,
+      }),
+    });
+
     taskDefinition.addContainer("jwt-pizza-service", {
       image: ecs.ContainerImage.fromEcrRepository(repository, "latest"),
       portMappings: [{ containerPort: 80 }],
+      logging: logGroup
     });
 
     // Create ECS Cluster
