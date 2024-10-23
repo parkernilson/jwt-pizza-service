@@ -158,16 +158,6 @@ export class JwtPizzaServiceStack extends cdk.Stack {
         "Role that the Amazon ECS container agent and the Docker daemon can assume",
     });
 
-    // Add IAM Pass Role permissions so that GithubActionsRole can pass the TaskExecution role for deployment
-    githubActionsRole.addToPolicy(
-      new iam.PolicyStatement({
-        sid: "PassRolesInTaskDefinition",
-        effect: iam.Effect.ALLOW,
-        actions: ["iam:PassRole"],
-        resources: [taskExecutionRole.roleArn],
-      })
-    );
-
     // Add managed policy for ECS task execution
     taskExecutionRole.addManagedPolicy(
       iam.ManagedPolicy.fromAwsManagedPolicyName(
@@ -203,6 +193,19 @@ export class JwtPizzaServiceStack extends cdk.Stack {
         executionRole: taskExecutionRole,
         // taskRole: // TODO: add task role here if we want to give task access to db without using explicit credentials
       }
+    );
+
+    // Add IAM Pass Role permissions so that GithubActionsRole can pass the TaskExecution role for deployment
+    githubActionsRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: "PassRolesInTaskDefinition",
+        effect: iam.Effect.ALLOW,
+        actions: ["iam:PassRole"],
+        resources: [
+          taskExecutionRole.roleArn,
+          taskDefinition.taskRole.roleArn
+        ],
+      })
     );
 
     taskDefinition.addContainer("jwt-pizza-service", {
