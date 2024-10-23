@@ -90,7 +90,6 @@ jobs:
           sed -i "s/\(.*user: '\)[^']*\('\)/\1${{ secrets.DB_USERNAME }}\2/g" dist/config.js
           sed -i "s/\(.*password: '\)[^']*\('\)/\1${{ secrets.DB_PASSWORD }}\2/g" dist/config.js
           sed -i "s/\(.*host: '\)[^']*\('\)/\1${{ secrets.DB_HOSTNAME }}\2/g" dist/config.js
-          cat dist/config.js
       
       - name: Update distribution artifact
         uses: actions/upload-artifact@v4
