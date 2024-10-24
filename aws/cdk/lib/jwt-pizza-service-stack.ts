@@ -6,7 +6,8 @@ import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
-import * as logs from 'aws-cdk-lib/aws-logs'
+import * as logs from "aws-cdk-lib/aws-logs";
+import * as keypair from "cdk-ec2-key-pair"
 import { Construct } from "constructs";
 
 export class JwtPizzaServiceStack extends cdk.Stack {
@@ -132,10 +133,9 @@ export class JwtPizzaServiceStack extends cdk.Stack {
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
       securityGroups: [dbSg],
-      databaseName: "pizza",
       instanceIdentifier: "jwt-pizza-service-db",
       credentials: rds.Credentials.fromGeneratedSecret("admin", {
-        excludeCharacters: '"@/\\\'[]{}:,+%~`$&*?|><;=()!#^-.'
+        excludeCharacters: "\"@/\\'[]{}:,+%~`$&*?|><;=()!#^-.",
       }),
       publiclyAccessible: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -223,7 +223,7 @@ export class JwtPizzaServiceStack extends cdk.Stack {
     taskDefinition.addContainer("jwt-pizza-service", {
       image: ecs.ContainerImage.fromEcrRepository(repository, "latest"),
       portMappings: [{ containerPort: 80 }],
-      logging: logGroup
+      logging: logGroup,
     });
 
     // Create ECS Cluster
@@ -240,7 +240,7 @@ export class JwtPizzaServiceStack extends cdk.Stack {
       assignPublicIp: false,
       serviceName: pizzaServiceServiceName,
       securityGroups: [pizzaServiceSg],
-      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }
+      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
 
     // Create a new certificate
@@ -282,6 +282,101 @@ export class JwtPizzaServiceStack extends cdk.Stack {
 
     // Allow ALB to access ECS Service
     ecsService.connections.allowFrom(alb, ec2.Port.tcp(80));
+
+    // Create a security group for the bastion host
+    const bastionSg = new ec2.SecurityGroup(this, "BastionSg", {
+      vpc,
+      description: "Security group for Bastion Host",
+      allowAllOutbound: true,
+    });
+
+    bastionSg.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(22),
+      "Allow SSH access"
+    );
+
+    // Create a key pair
+    const key = new keypair.KeyPair(this, "BastionKey", {
+      keyPairName: "bastion-key",
+      description: "Key pair for Bastion Host",
+      storePublicKey: true, // Store public key in SSM Parameter Store
+    });
+
+    // Create a role for the bastion host
+    const bastionRole = new iam.Role(this, "BastionRole", {
+      assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "AmazonSSMManagedInstanceCore"
+        ),
+      ],
+    });
+
+    // Add policy to access DB secrets
+    bastionRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["secretsmanager:GetSecretValue"],
+        resources: [dbInstance.secret!.secretArn],
+      })
+    );
+
+    // Create the bastion host
+    const bastionHost = new ec2.Instance(this, "BastionHost", {
+      vpc,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PUBLIC,
+      },
+      instanceType: ec2.InstanceType.of(
+        ec2.InstanceClass.T4G,
+        ec2.InstanceSize.NANO
+      ),
+      machineImage: ec2.MachineImage.lookup({
+        name: "al2023-ami-2023.*-arm64",
+        owners: ["amazon"],
+      }),
+      securityGroup: bastionSg,
+      keyName: key.keyPairName,
+      role: bastionRole,
+    });
+
+    // Allow the bastion host to connect to RDS
+    dbSg.addIngressRule(
+      bastionSg,
+      ec2.Port.tcp(3306),
+      "Allow MySQL access from Bastion"
+    );
+
+    // Install MySQL client and other utilities using user data
+    bastionHost.addUserData(
+      "yum update -y",
+      "yum install -y mysql jq",
+      // Script to easily get DB credentials from Secrets Manager
+      "echo '#!/bin/bash\naws secretsmanager get-secret-value --secret-id " +
+        dbInstance.secret!.secretName +
+        " --query SecretString --output text | jq -r .' > /usr/local/bin/get-db-secret",
+      "chmod +x /usr/local/bin/get-db-secret"
+    );
+
+    // Output connection information
+    new cdk.CfnOutput(this, "BastionHostId", {
+      value: bastionHost.instanceId,
+      description: "Bastion Host Instance ID",
+    });
+
+    new cdk.CfnOutput(this, "BastionPublicIP", {
+      value: bastionHost.instancePublicIp,
+      description: "Bastion Host Public IP",
+    });
+
+    new cdk.CfnOutput(this, "SSHCommand", {
+      value: `ssh -i ~/.ssh/${key.keyPairName}.pem ec2-user@${bastionHost.instancePublicIp}`,
+      description: "SSH command to connect to bastion",
+    });
+
+    // Output the key pair instructions
+    key.grantReadOnPublicKey;
 
     // Output the repository URI
     new cdk.CfnOutput(this, "RepositoryUri", {

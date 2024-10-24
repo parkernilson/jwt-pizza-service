@@ -6,5 +6,6 @@
     "us-east-1d",
     "us-east-1e",
     "us-east-1f"
-  ]
+  ],
+  "ami:account=445044180652:filters.image-type.0=machine:filters.name.0=al2023-ami-2023.*-arm64:filters.state.0=available:owners.0=amazon:region=us-east-1": "ami-02801556a781a4499"
 }
