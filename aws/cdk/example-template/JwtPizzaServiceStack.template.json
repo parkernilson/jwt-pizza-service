@@ -1,0 +1,1904 @@
+{
+ "Resources": {
+  "JwtPizzaVpcC4EFD6B6": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/Resource"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet1SubnetE610A5BB": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1/Subnet"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet1RouteTable55BAC630": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1/RouteTable"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet1RouteTableAssociation6960A785": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "JwtPizzaVpcPublicSubnet1RouteTable55BAC630"
+    },
+    "SubnetId": {
+     "Ref": "JwtPizzaVpcPublicSubnet1SubnetE610A5BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet1DefaultRouteB8822FB8": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "JwtPizzaVpcIGW3147A76A"
+    },
+    "RouteTableId": {
+     "Ref": "JwtPizzaVpcPublicSubnet1RouteTable55BAC630"
+    }
+   },
+   "DependsOn": [
+    "JwtPizzaVpcVPCGW83B6D7EF"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet1EIPFFDE0EB9": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1/EIP"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet1NATGatewayE21B78F7": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "JwtPizzaVpcPublicSubnet1EIPFFDE0EB9",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "JwtPizzaVpcPublicSubnet1SubnetE610A5BB"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "JwtPizzaVpcPublicSubnet1DefaultRouteB8822FB8",
+    "JwtPizzaVpcPublicSubnet1RouteTableAssociation6960A785"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet1/NATGateway"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet2SubnetECD32857": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet2/Subnet"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet2RouteTableB0F1777F": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet2/RouteTable"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet2RouteTableAssociation4A7B8B7A": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "JwtPizzaVpcPublicSubnet2RouteTableB0F1777F"
+    },
+    "SubnetId": {
+     "Ref": "JwtPizzaVpcPublicSubnet2SubnetECD32857"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "JwtPizzaVpcPublicSubnet2DefaultRoute0FFB5DBE": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "JwtPizzaVpcIGW3147A76A"
+    },
+    "RouteTableId": {
+     "Ref": "JwtPizzaVpcPublicSubnet2RouteTableB0F1777F"
+    }
+   },
+   "DependsOn": [
+    "JwtPizzaVpcVPCGW83B6D7EF"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "JwtPizzaVpcPrivateSubnet1SubnetF19AB938": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.2.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet1/Subnet"
+   }
+  },
+  "JwtPizzaVpcPrivateSubnet1RouteTableB6FAC0DD": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet1/RouteTable"
+   }
+  },
+  "JwtPizzaVpcPrivateSubnet1RouteTableAssociationD1DD4CD7": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "JwtPizzaVpcPrivateSubnet1RouteTableB6FAC0DD"
+    },
+    "SubnetId": {
+     "Ref": "JwtPizzaVpcPrivateSubnet1SubnetF19AB938"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "JwtPizzaVpcPrivateSubnet1DefaultRoute0A485C89": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "JwtPizzaVpcPublicSubnet1NATGatewayE21B78F7"
+    },
+    "RouteTableId": {
+     "Ref": "JwtPizzaVpcPrivateSubnet1RouteTableB6FAC0DD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet1/DefaultRoute"
+   }
+  },
+  "JwtPizzaVpcPrivateSubnet2Subnet2DE6BBEE": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.3.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet2/Subnet"
+   }
+  },
+  "JwtPizzaVpcPrivateSubnet2RouteTable868B70F2": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet2/RouteTable"
+   }
+  },
+  "JwtPizzaVpcPrivateSubnet2RouteTableAssociation6BE893E3": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "JwtPizzaVpcPrivateSubnet2RouteTable868B70F2"
+    },
+    "SubnetId": {
+     "Ref": "JwtPizzaVpcPrivateSubnet2Subnet2DE6BBEE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet2/RouteTableAssociation"
+   }
+  },
+  "JwtPizzaVpcPrivateSubnet2DefaultRouteDDDA8385": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "JwtPizzaVpcPublicSubnet1NATGatewayE21B78F7"
+    },
+    "RouteTableId": {
+     "Ref": "JwtPizzaVpcPrivateSubnet2RouteTable868B70F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/PrivateSubnet2/DefaultRoute"
+   }
+  },
+  "JwtPizzaVpcIGW3147A76A": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/JwtPizzaVpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/IGW"
+   }
+  },
+  "JwtPizzaVpcVPCGW83B6D7EF": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "JwtPizzaVpcIGW3147A76A"
+    },
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/VPCGW"
+   }
+  },
+  "JwtPizzaVpcRestrictDefaultSecurityGroupCustomResource9C0FC500": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "JwtPizzaVpcC4EFD6B6",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "445044180652"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaVpc/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-1:445044180652:security-group/",
+             {
+              "Fn::GetAtt": [
+               "JwtPizzaVpcC4EFD6B6",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-445044180652-us-east-1",
+     "S3Key": "ee7de53d64cc9d6248fa6aa550f92358f6c907b5efd6f3298aeab1b5e7ea358a.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.ee7de53d64cc9d6248fa6aa550f92358f6c907b5efd6f3298aeab1b5e7ea358a",
+    "aws:asset:property": "Code"
+   }
+  },
+  "JwtPizzaServiceSg2FDE6802": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "JWT Pizza Service",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow HTTP traffic",
+      "FromPort": 80,
+      "IpProtocol": "tcp",
+      "ToPort": 80
+     },
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow HTTPS traffic",
+      "FromPort": 443,
+      "IpProtocol": "tcp",
+      "ToPort": 443
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaServiceSg/Resource"
+   }
+  },
+  "JwtPizzaServiceSgfromJwtPizzaServiceStackMyALBSecurityGroupFA6D291980FC54F28D": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "FromPort": 80,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "JwtPizzaServiceSg2FDE6802",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "MyALBSecurityGroupF26FC01F",
+      "GroupId"
+     ]
+    },
+    "ToPort": 80
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaServiceSg/from JwtPizzaServiceStackMyALBSecurityGroupFA6D2919:80"
+   }
+  },
+  "JwtPizzaDbSg665FDAC3": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "JWT Pizza Service Database",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "255.255.255.255/32",
+      "Description": "Disallow all traffic",
+      "FromPort": 252,
+      "IpProtocol": "icmp",
+      "ToPort": 86
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaDbSg/Resource"
+   }
+  },
+  "JwtPizzaDbSgfromJwtPizzaServiceStackJwtPizzaServiceSg32D8DBA23306929D77BB": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow MySQL traffic from Pizza Service",
+    "FromPort": 3306,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "JwtPizzaDbSg665FDAC3",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "JwtPizzaServiceSg2FDE6802",
+      "GroupId"
+     ]
+    },
+    "ToPort": 3306
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaDbSg/from JwtPizzaServiceStackJwtPizzaServiceSg32D8DBA2:3306"
+   }
+  },
+  "JwtPizzaDbSgfromJwtPizzaServiceStackBastionSgD0EFFA7F3306ACBB740C": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow MySQL access from Bastion",
+    "FromPort": 3306,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "JwtPizzaDbSg665FDAC3",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "BastionSg3D6BE75A",
+      "GroupId"
+     ]
+    },
+    "ToPort": 3306
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaDbSg/from JwtPizzaServiceStackBastionSgD0EFFA7F:3306"
+   }
+  },
+  "PizzaServiceGitHubActionsRole0A6EC47B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRoleWithWebIdentity",
+       "Condition": {
+        "StringEquals": {
+         "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+         "token.actions.githubusercontent.com:sub": "repo:parkernilson/jwt-pizza-service:ref:refs/heads/main"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Federated": "arn:aws:iam::445044180652:oidc-provider/token.actions.githubusercontent.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "Role for GitHub Actions to ECR and ECS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/PizzaServiceGitHubActionsRole/Resource"
+   }
+  },
+  "PizzaServiceGitHubActionsRoleDefaultPolicyB6B68A14": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "ecr:*",
+       "Effect": "Allow",
+       "Resource": "*",
+       "Sid": "PushToECR"
+      },
+      {
+       "Action": [
+        "ecs:DescribeTaskDefinition",
+        "ecs:RegisterTaskDefinition"
+       ],
+       "Effect": "Allow",
+       "Resource": "*",
+       "Sid": "RegisterTaskDefinition"
+      },
+      {
+       "Action": [
+        "ecs:DescribeServices",
+        "ecs:UpdateService"
+       ],
+       "Effect": "Allow",
+       "Resource": "arn:aws:ecs:us-east-1:445044180652:service/jwt-pizza-service/jwt-pizza-service",
+       "Sid": "DeployService"
+      },
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EcsTaskExecutionRoleC0B6A84D",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "JwtPizzaServiceTaskDefTaskRoleA33963C7",
+          "Arn"
+         ]
+        }
+       ],
+       "Sid": "PassRolesInTaskDefinition"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PizzaServiceGitHubActionsRoleDefaultPolicyB6B68A14",
+    "Roles": [
+     {
+      "Ref": "PizzaServiceGitHubActionsRole0A6EC47B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/PizzaServiceGitHubActionsRole/DefaultPolicy/Resource"
+   }
+  },
+  "JwtPizzaDbSubnetGroup0788B759": {
+   "Type": "AWS::RDS::DBSubnetGroup",
+   "Properties": {
+    "DBSubnetGroupDescription": "Subnet group for JwtPizzaDb database",
+    "SubnetIds": [
+     {
+      "Ref": "JwtPizzaVpcPrivateSubnet1SubnetF19AB938"
+     },
+     {
+      "Ref": "JwtPizzaVpcPrivateSubnet2Subnet2DE6BBEE"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaDb/SubnetGroup/Default"
+   }
+  },
+  "JwtPizzaServiceStackJwtPizzaDbSecret7E9A6FD013fc3bc8240e4b5e9ccbe71394b5efa2": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Generated by the CDK for stack: ",
+       {
+        "Ref": "AWS::StackName"
+       }
+      ]
+     ]
+    },
+    "GenerateSecretString": {
+     "ExcludeCharacters": "\"@/\\'[]{}:,+%~`$&*?|><;=()!#^-.",
+     "GenerateStringKey": "password",
+     "PasswordLength": 30,
+     "SecretStringTemplate": "{\"username\":\"admin\"}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaDb/Secret/Resource"
+   }
+  },
+  "JwtPizzaDbSecretAttachment7ABF769D": {
+   "Type": "AWS::SecretsManager::SecretTargetAttachment",
+   "Properties": {
+    "SecretId": {
+     "Ref": "JwtPizzaServiceStackJwtPizzaDbSecret7E9A6FD013fc3bc8240e4b5e9ccbe71394b5efa2"
+    },
+    "TargetId": {
+     "Ref": "JwtPizzaDbB305C621"
+    },
+    "TargetType": "AWS::RDS::DBInstance"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaDb/Secret/Attachment/Resource"
+   }
+  },
+  "JwtPizzaDbB305C621": {
+   "Type": "AWS::RDS::DBInstance",
+   "Properties": {
+    "AllocatedStorage": "100",
+    "CopyTagsToSnapshot": true,
+    "DBInstanceClass": "db.t4g.micro",
+    "DBInstanceIdentifier": "jwt-pizza-service-db",
+    "DBSubnetGroupName": {
+     "Ref": "JwtPizzaDbSubnetGroup0788B759"
+    },
+    "DeletionProtection": false,
+    "Engine": "mysql",
+    "EngineVersion": "8.0",
+    "MasterUserPassword": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "JwtPizzaServiceStackJwtPizzaDbSecret7E9A6FD013fc3bc8240e4b5e9ccbe71394b5efa2"
+       },
+       ":SecretString:password::}}"
+      ]
+     ]
+    },
+    "MasterUsername": "admin",
+    "PubliclyAccessible": false,
+    "StorageType": "gp2",
+    "VPCSecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "JwtPizzaDbSg665FDAC3",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaDb/Resource"
+   }
+  },
+  "JwtPizzaServiceECRCE267BF9": {
+   "Type": "AWS::ECR::Repository",
+   "Properties": {
+    "ImageScanningConfiguration": {
+     "ScanOnPush": true
+    },
+    "ImageTagMutability": "MUTABLE",
+    "LifecyclePolicy": {
+     "LifecyclePolicyText": "{\"rules\":[{\"rulePriority\":1,\"selection\":{\"tagStatus\":\"untagged\",\"countType\":\"sinceImagePushed\",\"countNumber\":1,\"countUnit\":\"days\"},\"action\":{\"type\":\"expire\"}}]}"
+    },
+    "RepositoryName": "jwt-pizza-service"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaServiceECR/Resource"
+   }
+  },
+  "EcsTaskExecutionRoleC0B6A84D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "Role that the Amazon ECS container agent and the Docker daemon can assume",
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/EcsTaskExecutionRole/Resource"
+   }
+  },
+  "EcsTaskExecutionRoleDefaultPolicyDCEEFDC3": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:GetAuthorizationToken",
+        "ecr:GetDownloadUrlForLayer"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JwtPizzaServiceECRCE267BF9",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JwtPizzaServiceLogGroupF89979B2",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "EcsTaskExecutionRoleDefaultPolicyDCEEFDC3",
+    "Roles": [
+     {
+      "Ref": "EcsTaskExecutionRoleC0B6A84D"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/EcsTaskExecutionRole/DefaultPolicy/Resource"
+   }
+  },
+  "JwtPizzaServiceTaskDefTaskRoleA33963C7": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaServiceTaskDef/TaskRole/Resource"
+   }
+  },
+  "JwtPizzaServiceTaskDefC25A08AE": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Essential": true,
+      "Image": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Fn::Select": [
+           4,
+           {
+            "Fn::Split": [
+             ":",
+             {
+              "Fn::GetAtt": [
+               "JwtPizzaServiceECRCE267BF9",
+               "Arn"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         ".dkr.ecr.",
+         {
+          "Fn::Select": [
+           3,
+           {
+            "Fn::Split": [
+             ":",
+             {
+              "Fn::GetAtt": [
+               "JwtPizzaServiceECRCE267BF9",
+               "Arn"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         ".",
+         {
+          "Ref": "AWS::URLSuffix"
+         },
+         "/",
+         {
+          "Ref": "JwtPizzaServiceECRCE267BF9"
+         },
+         ":latest"
+        ]
+       ]
+      },
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "JwtPizzaServiceLogGroupF89979B2"
+        },
+        "awslogs-stream-prefix": "jwt-pizza-service",
+        "awslogs-region": "us-east-1"
+       }
+      },
+      "Name": "jwt-pizza-service",
+      "PortMappings": [
+       {
+        "ContainerPort": 80,
+        "Protocol": "tcp"
+       }
+      ]
+     }
+    ],
+    "Cpu": "512",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "EcsTaskExecutionRoleC0B6A84D",
+      "Arn"
+     ]
+    },
+    "Family": "jwt-pizza-service",
+    "Memory": "1024",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "RuntimePlatform": {
+     "CpuArchitecture": "ARM64",
+     "OperatingSystemFamily": "LINUX"
+    },
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "JwtPizzaServiceTaskDefTaskRoleA33963C7",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaServiceTaskDef/Resource"
+   }
+  },
+  "JwtPizzaServiceLogGroupF89979B2": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/ecs/jwt-pizza-service",
+    "RetentionInDays": 731
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaServiceLogGroup/Resource"
+   }
+  },
+  "JwtPizzaServiceClusterDBCF614F": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "ClusterName": "jwt-pizza-service"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaServiceCluster/Resource"
+   }
+  },
+  "JwtPizzaServiceServiceC7139302": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "JwtPizzaServiceClusterDBCF614F"
+    },
+    "DeploymentConfiguration": {
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 50
+    },
+    "DesiredCount": 1,
+    "EnableECSManagedTags": false,
+    "HealthCheckGracePeriodSeconds": 60,
+    "LaunchType": "FARGATE",
+    "LoadBalancers": [
+     {
+      "ContainerName": "jwt-pizza-service",
+      "ContainerPort": 80,
+      "TargetGroupArn": {
+       "Ref": "MyALBHttpsListenerECSGroup6CD98B75"
+      }
+     }
+    ],
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Fn::GetAtt": [
+         "JwtPizzaServiceSg2FDE6802",
+         "GroupId"
+        ]
+       }
+      ],
+      "Subnets": [
+       {
+        "Ref": "JwtPizzaVpcPrivateSubnet1SubnetF19AB938"
+       },
+       {
+        "Ref": "JwtPizzaVpcPrivateSubnet2Subnet2DE6BBEE"
+       }
+      ]
+     }
+    },
+    "ServiceName": "jwt-pizza-service",
+    "TaskDefinition": {
+     "Ref": "JwtPizzaServiceTaskDefC25A08AE"
+    }
+   },
+   "DependsOn": [
+    "JwtPizzaServiceTaskDefTaskRoleA33963C7",
+    "MyALBHttpsListenerECSGroup6CD98B75",
+    "MyALBHttpsListener4406591D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/JwtPizzaServiceService/Service"
+   }
+  },
+  "Certificate4E7ABB08": {
+   "Type": "AWS::CertificateManager::Certificate",
+   "Properties": {
+    "DomainName": "pizza-service.parkernilson.dev",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/Certificate"
+     }
+    ],
+    "ValidationMethod": "DNS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/Certificate/Resource"
+   }
+  },
+  "MyALB911A8556": {
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+   "Properties": {
+    "LoadBalancerAttributes": [
+     {
+      "Key": "deletion_protection.enabled",
+      "Value": "false"
+     }
+    ],
+    "Scheme": "internet-facing",
+    "SecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "MyALBSecurityGroupF26FC01F",
+       "GroupId"
+      ]
+     }
+    ],
+    "Subnets": [
+     {
+      "Ref": "JwtPizzaVpcPublicSubnet1SubnetE610A5BB"
+     },
+     {
+      "Ref": "JwtPizzaVpcPublicSubnet2SubnetECD32857"
+     }
+    ],
+    "Type": "application"
+   },
+   "DependsOn": [
+    "JwtPizzaVpcPublicSubnet1DefaultRouteB8822FB8",
+    "JwtPizzaVpcPublicSubnet1RouteTableAssociation6960A785",
+    "JwtPizzaVpcPublicSubnet2DefaultRoute0FFB5DBE",
+    "JwtPizzaVpcPublicSubnet2RouteTableAssociation4A7B8B7A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/MyALB/Resource"
+   }
+  },
+  "MyALBSecurityGroupF26FC01F": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Automatically created Security Group for ELB JwtPizzaServiceStackMyALBBDA04B5B",
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow from anyone on port 443",
+      "FromPort": 443,
+      "IpProtocol": "tcp",
+      "ToPort": 443
+     },
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow from anyone on port 80",
+      "FromPort": 80,
+      "IpProtocol": "tcp",
+      "ToPort": 80
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/MyALB/SecurityGroup/Resource"
+   }
+  },
+  "MyALBSecurityGrouptoJwtPizzaServiceStackJwtPizzaServiceSg32D8DBA280571D91CA": {
+   "Type": "AWS::EC2::SecurityGroupEgress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "DestinationSecurityGroupId": {
+     "Fn::GetAtt": [
+      "JwtPizzaServiceSg2FDE6802",
+      "GroupId"
+     ]
+    },
+    "FromPort": 80,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "MyALBSecurityGroupF26FC01F",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "ToPort": 80
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/MyALB/SecurityGroup/to JwtPizzaServiceStackJwtPizzaServiceSg32D8DBA2:80"
+   }
+  },
+  "MyALBHttpsListener4406591D": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "Certificates": [
+     {
+      "CertificateArn": {
+       "Ref": "Certificate4E7ABB08"
+      }
+     }
+    ],
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "MyALBHttpsListenerECSGroup6CD98B75"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "MyALB911A8556"
+    },
+    "Port": 443,
+    "Protocol": "HTTPS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/MyALB/HttpsListener/Resource"
+   }
+  },
+  "MyALBHttpsListenerECSGroup6CD98B75": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckIntervalSeconds": 60,
+    "HealthCheckPath": "/api/docs",
+    "Port": 80,
+    "Protocol": "HTTP",
+    "TargetGroupAttributes": [
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "ip",
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/MyALB/HttpsListener/ECSGroup/Resource"
+   }
+  },
+  "MyALBRedirect80To443ACFE26CD": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "RedirectConfig": {
+       "Port": "443",
+       "Protocol": "HTTPS",
+       "StatusCode": "HTTP_301"
+      },
+      "Type": "redirect"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "MyALB911A8556"
+    },
+    "Port": 80,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/MyALB/Redirect80To443/Resource"
+   }
+  },
+  "BastionSg3D6BE75A": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for Bastion Host",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow SSH access",
+      "FromPort": 22,
+      "IpProtocol": "tcp",
+      "ToPort": 22
+     }
+    ],
+    "VpcId": {
+     "Ref": "JwtPizzaVpcC4EFD6B6"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/BastionSg/Resource"
+   }
+  },
+  "BastionKeyEC2KeyPairbastionkey10352797": {
+   "Type": "Custom::EC2-Key-Pair",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "EC2KeyPairManagerLambdaDD75396B",
+      "Arn"
+     ]
+    },
+    "Name": "bastion-key",
+    "Description": "Key pair for Bastion Host",
+    "KmsPrivate": "alias/aws/secretsmanager",
+    "KmsPublic": "alias/aws/secretsmanager",
+    "PublicKey": "",
+    "StorePublicKey": "true",
+    "ExposePublicKey": "false",
+    "KeyType": "rsa",
+    "PublicKeyFormat": "ssh",
+    "RemoveKeySecretsAfterDays": 0,
+    "SecretPrefix": "ec2-ssh-key/",
+    "StackName": "JwtPizzaServiceStack",
+    "Tags": {
+     "CreatedByCfnCustomResource": "CFN::Resource::Custom::EC2-Key-Pair"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/BastionKey/EC2-Key-Pair-bastion-key/Default"
+   }
+  },
+  "EC2KeyPairManagerLambdaServiceRoleC041DB3E": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/EC2-Key-Pair-Manager-Lambda/ServiceRole/Resource"
+   }
+  },
+  "EC2KeyPairManagerLambdaServiceRoleDefaultPolicy83A403DD": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ec2:DescribeKeyPairs",
+        "secretsmanager:ListSecrets"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "ec2:CreateKeyPair",
+        "ec2:CreateTags",
+        "ec2:ImportKeyPair"
+       ],
+       "Condition": {
+        "StringLike": {
+         "aws:RequestTag/CreatedByCfnCustomResource": "CFN::Resource::Custom::EC2-Key-Pair"
+        }
+       },
+       "Effect": "Allow",
+       "Resource": "arn:aws:ec2:*:*:key-pair/*"
+      },
+      {
+       "Action": [
+        "ec2:CreateTags",
+        "ec2:DeleteKeyPair",
+        "ec2:DeleteTags"
+       ],
+       "Condition": {
+        "StringLike": {
+         "ec2:ResourceTag/CreatedByCfnCustomResource": "CFN::Resource::Custom::EC2-Key-Pair"
+        }
+       },
+       "Effect": "Allow",
+       "Resource": "arn:aws:ec2:*:*:key-pair/*"
+      },
+      {
+       "Action": [
+        "secretsmanager:CreateSecret",
+        "secretsmanager:TagResource"
+       ],
+       "Condition": {
+        "StringLike": {
+         "aws:RequestTag/CreatedByCfnCustomResource": "CFN::Resource::Custom::EC2-Key-Pair"
+        }
+       },
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "secretsmanager:DeleteResourcePolicy",
+        "secretsmanager:DeleteSecret",
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetResourcePolicy",
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:ListSecretVersionIds",
+        "secretsmanager:PutResourcePolicy",
+        "secretsmanager:PutSecretValue",
+        "secretsmanager:RestoreSecret",
+        "secretsmanager:UntagResource",
+        "secretsmanager:UpdateSecret",
+        "secretsmanager:UpdateSecretVersionStage"
+       ],
+       "Condition": {
+        "StringLike": {
+         "secretsmanager:ResourceTag/CreatedByCfnCustomResource": "CFN::Resource::Custom::EC2-Key-Pair"
+        }
+       },
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "EC2KeyPairManagerLambdaServiceRoleDefaultPolicy83A403DD",
+    "Roles": [
+     {
+      "Ref": "EC2KeyPairManagerLambdaServiceRoleC041DB3E"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/EC2-Key-Pair-Manager-Lambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "EC2KeyPairManagerLambdaDD75396B": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-445044180652-us-east-1",
+     "S3Key": "afa3f4d97f22c10f68f48f80fa24108566747fa440fad319196a06bdcd991b07.zip"
+    },
+    "Description": "Custom CFN resource: Manage EC2 Key Pairs",
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "EC2KeyPairManagerLambdaServiceRoleC041DB3E",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 180
+   },
+   "DependsOn": [
+    "EC2KeyPairManagerLambdaServiceRoleDefaultPolicy83A403DD",
+    "EC2KeyPairManagerLambdaServiceRoleC041DB3E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/EC2-Key-Pair-Manager-Lambda/Resource",
+    "aws:asset:path": "asset.afa3f4d97f22c10f68f48f80fa24108566747fa440fad319196a06bdcd991b07.zip",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "BastionRole201D3308": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonSSMManagedInstanceCore"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/BastionRole/Resource"
+   }
+  },
+  "BastionRoleDefaultPolicy2C10035E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "secretsmanager:GetSecretValue",
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "JwtPizzaDbSecretAttachment7ABF769D"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BastionRoleDefaultPolicy2C10035E",
+    "Roles": [
+     {
+      "Ref": "BastionRole201D3308"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/BastionRole/DefaultPolicy/Resource"
+   }
+  },
+  "BastionHostInstanceProfile89CC0AF9": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "BastionRole201D3308"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/BastionHost/InstanceProfile"
+   }
+  },
+  "BastionHost04D516A6": {
+   "Type": "AWS::EC2::Instance",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "IamInstanceProfile": {
+     "Ref": "BastionHostInstanceProfile89CC0AF9"
+    },
+    "ImageId": "ami-02801556a781a4499",
+    "InstanceType": "t4g.nano",
+    "KeyName": {
+     "Fn::GetAtt": [
+      "BastionKeyEC2KeyPairbastionkey10352797",
+      "KeyPairName"
+     ]
+    },
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "BastionSg3D6BE75A",
+       "GroupId"
+      ]
+     }
+    ],
+    "SubnetId": {
+     "Ref": "JwtPizzaVpcPublicSubnet1SubnetE610A5BB"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "JwtPizzaServiceStack/BastionHost"
+     }
+    ],
+    "UserData": {
+     "Fn::Base64": {
+      "Fn::Join": [
+       "",
+       [
+        "#!/bin/bash\nyum update -y\nyum install -y mysql jq\necho '#!/bin/bash\naws secretsmanager get-secret-value --secret-id ",
+        {
+         "Fn::Join": [
+          "-",
+          [
+           {
+            "Fn::Select": [
+             0,
+             {
+              "Fn::Split": [
+               "-",
+               {
+                "Fn::Select": [
+                 6,
+                 {
+                  "Fn::Split": [
+                   ":",
+                   {
+                    "Ref": "JwtPizzaServiceStackJwtPizzaDbSecret7E9A6FD013fc3bc8240e4b5e9ccbe71394b5efa2"
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "Fn::Select": [
+             1,
+             {
+              "Fn::Split": [
+               "-",
+               {
+                "Fn::Select": [
+                 6,
+                 {
+                  "Fn::Split": [
+                   ":",
+                   {
+                    "Ref": "JwtPizzaServiceStackJwtPizzaDbSecret7E9A6FD013fc3bc8240e4b5e9ccbe71394b5efa2"
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         ]
+        },
+        " --query SecretString --output text | jq -r .' > /usr/local/bin/get-db-secret\nchmod +x /usr/local/bin/get-db-secret"
+       ]
+      ]
+     }
+    }
+   },
+   "DependsOn": [
+    "BastionRoleDefaultPolicy2C10035E",
+    "BastionRole201D3308"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/BastionHost/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/31TXW/bMAz8LX1XtDYFBuwxaboiQLEZSdHXgpYZl40tGfpIURj576Os2HK7YU88HinpeLSX8ub7Ut5cwbtbqOq4aKiU/d6DOgqmXnpUS9k/d0rcHfRzcSeKUDak9qHU6COX0c4Ej09QNpj5zK2cM4rAk9FTcwT32yKGX+AfwOM7fIjC0olhvnirPVrGY0NScslWnrW+tqi92KMKlvzHgzWhGzT8l9jq2qJzf/H3id5q50ErTAoSPguCVvY7k2YcYmHYj0FURmN/Yc2BGj5mKyf7DXgoweF0cxpxUrdZz4mxm7XZ5MNmnXW4gXUtaKjRyj4NERtTeAJbo5+ZMzV8rZwF0zwTdsaRN3YYIGexzNp/8imIq3THDR5I07jIr4zRHkijnXNNcLzB2D3Cy3V7tCdKFl/gWTSm5vceTT35MuKzUGg9HUjx0Tx55oYXcsrSG3CeVGOgKqFh50jXJ/6eV13XxBZW98i19VBLCj/l8z5i4frSM+JZPdk6aZ6lPBK0ZQVsYtBq9G3EvMrbF3COlylXMXAu10Ed0a95+2exQ2eCjSaxdabNadzSP0v81Z2oQhvPi+FO/p9rHj2e+R18F3jp2lQo39y30/Ja/pDXV2+OaGGD9tSi3KX4B/QHSBkcBAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JwtPizzaServiceStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "BastionHostId": {
+   "Description": "Bastion Host Instance ID",
+   "Value": {
+    "Ref": "BastionHost04D516A6"
+   }
+  },
+  "BastionPublicIP": {
+   "Description": "Bastion Host Public IP",
+   "Value": {
+    "Fn::GetAtt": [
+     "BastionHost04D516A6",
+     "PublicIp"
+    ]
+   }
+  },
+  "SSHCommand": {
+   "Description": "SSH command to connect to bastion",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "ssh -i ~/.ssh/",
+      {
+       "Fn::GetAtt": [
+        "BastionKeyEC2KeyPairbastionkey10352797",
+        "KeyPairName"
+       ]
+      },
+      ".pem ec2-user@",
+      {
+       "Fn::GetAtt": [
+        "BastionHost04D516A6",
+        "PublicIp"
+       ]
+      }
+     ]
+    ]
+   }
+  },
+  "RepositoryUri": {
+   "Description": "The URI of the ECR repository",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      {
+       "Fn::Select": [
+        4,
+        {
+         "Fn::Split": [
+          ":",
+          {
+           "Fn::GetAtt": [
+            "JwtPizzaServiceECRCE267BF9",
+            "Arn"
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      ".dkr.ecr.",
+      {
+       "Fn::Select": [
+        3,
+        {
+         "Fn::Split": [
+          ":",
+          {
+           "Fn::GetAtt": [
+            "JwtPizzaServiceECRCE267BF9",
+            "Arn"
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "JwtPizzaServiceECRCE267BF9"
+      }
+     ]
+    ]
+   }
+  },
+  "DbEndpoint": {
+   "Description": "Database Endpoint",
+   "Value": {
+    "Fn::GetAtt": [
+     "JwtPizzaDbB305C621",
+     "Endpoint.Address"
+    ]
+   }
+  },
+  "DbSecretName": {
+   "Description": "Database Credentials Secret Name",
+   "Value": {
+    "Fn::Join": [
+     "-",
+     [
+      {
+       "Fn::Select": [
+        0,
+        {
+         "Fn::Split": [
+          "-",
+          {
+           "Fn::Select": [
+            6,
+            {
+             "Fn::Split": [
+              ":",
+              {
+               "Ref": "JwtPizzaServiceStackJwtPizzaDbSecret7E9A6FD013fc3bc8240e4b5e9ccbe71394b5efa2"
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "Fn::Select": [
+        1,
+        {
+         "Fn::Split": [
+          "-",
+          {
+           "Fn::Select": [
+            6,
+            {
+             "Fn::Split": [
+              ":",
+              {
+               "Ref": "JwtPizzaServiceStackJwtPizzaDbSecret7E9A6FD013fc3bc8240e4b5e9ccbe71394b5efa2"
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
