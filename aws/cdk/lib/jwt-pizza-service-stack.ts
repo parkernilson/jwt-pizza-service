@@ -135,7 +135,7 @@ export class JwtPizzaServiceStack extends cdk.Stack {
       databaseName: "pizza",
       instanceIdentifier: "jwt-pizza-service-db",
       credentials: rds.Credentials.fromGeneratedSecret("admin", {
-        excludeCharacters: '"@/\\\'[]{}:,+%~`$&*?|><;=()!#^-'
+        excludeCharacters: '"@/\\\'[]{}:,+%~`$&*?|><;=()!#^-.'
       }),
       publiclyAccessible: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
