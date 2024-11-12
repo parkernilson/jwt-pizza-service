@@ -19,15 +19,20 @@ class Metrics {
     this.postRequests = 0;
     this.deleteRequests = 0;
     this.getRequests = 0;
+    this.putRequests = 0;
     this.activeUsers = new Set();
     this.authenticationSuccesses = 0;
     this.authenticationFailures = 0;
 
     const activeUsersTimer = setInterval(() => {
       // Report on Active Users
-      this.sendMetricToGrafana("user", { metric: "active" }, { total: this.activeUsers.size });
+      this.sendMetricToGrafana(
+        "user",
+        { metric: "active" },
+        { total: this.activeUsers.size }
+      );
       this.activeUsers.clear();
-    }, 30000);
+    }, 10000);
     activeUsersTimer.unref();
 
     // This will periodically sent metrics to Grafana
@@ -35,17 +40,50 @@ class Metrics {
       // Report on CPU Usage
       const cpuUsagePercentage = getCpuUsagePercentage();
       const memoryUsagePercentage = getMemoryUsagePercentage();
-      this.sendMetricToGrafana("system", { metric: "cpu" }, { usage: cpuUsagePercentage });
-      this.sendMetricToGrafana("system", { metric: "memory" }, { usage: memoryUsagePercentage });
+      this.sendMetricToGrafana(
+        "system",
+        { metric: "cpu" },
+        { usage: cpuUsagePercentage }
+      );
+      this.sendMetricToGrafana(
+        "system",
+        { metric: "memory" },
+        { usage: memoryUsagePercentage }
+      );
 
       // Report on HTTP Requests
-      this.sendMetricToGrafana("request", { method: "post" }, { total: this.postRequests });
-      this.sendMetricToGrafana("request", { method: "get" }, { total: this.getRequests });
-      this.sendMetricToGrafana("request", { method: "delete" }, { total: this.deleteRequests });
+      this.sendMetricToGrafana(
+        "request",
+        { method: "post" },
+        { total: this.postRequests }
+      );
+      this.sendMetricToGrafana(
+        "request",
+        { method: "get" },
+        { total: this.getRequests }
+      );
+      this.sendMetricToGrafana(
+        "request",
+        { method: "delete" },
+        { total: this.deleteRequests }
+      );
+      this.sendMetricToGrafana(
+        "request",
+        { method: "put" },
+        { total: this.putRequests }
+      );
 
       // Report on Authentication Requests
-      this.sendMetricToGrafana("auth", { success: true }, { total: this.authenticationSuccesses });
-      this.sendMetricToGrafana("auth", { success: false }, { total: this.authenticationSuccesses });
+      this.sendMetricToGrafana(
+        "auth",
+        { success: true },
+        { total: this.authenticationSuccesses }
+      );
+      this.sendMetricToGrafana(
+        "auth",
+        { success: false },
+        { total: this.authenticationSuccesses }
+      );
     }, 10000);
     timer.unref();
   }
@@ -62,6 +100,8 @@ class Metrics {
         this.incrementDeleteRequests();
       } else if (req.method === "GET") {
         this.incrementGetRequests();
+      } else if (req.method === "PUT") {
+        this.incrementPutRequests();
       }
       next();
     };
@@ -77,6 +117,14 @@ class Metrics {
     };
   }
 
+  incrementSuccessfulAuthentications() {
+    this.authenticationSuccesses++;
+  }
+
+  incrementFailedAuthentications() {
+    this.authenticationFailures++;
+  }
+
   incrementPostRequests() {
     this.postRequests++;
   }
@@ -89,6 +137,10 @@ class Metrics {
     this.getRequests++;
   }
 
+  incrementPutRequests() {
+    this.putRequests++;
+  }
+
   /**
    *
    * @param {string} metricPrefix
@@ -96,7 +148,7 @@ class Metrics {
    * @param {{[metricName: string | number]}} metrics
    */
   sendMetricToGrafana(metricPrefix, tags, metrics) {
-    tags.source = tags.source || config.source;
+    tags.source = tags.source || config.metrics.source;
 
     const metric = `${metricPrefix},${Object.entries(tags)
       .map(([tag, tagVal]) => `${tag}=${tagVal}`)
@@ -104,10 +156,12 @@ class Metrics {
       .map(([metricName, metricValue]) => `${metricName}=${metricValue}`)
       .join(",")}`;
 
-    fetch(`${config.url}`, {
+    fetch(`${config.metrics.url}`, {
       method: "post",
       body: metric,
-      headers: { Authorization: `Bearer ${config.userId}:${config.apiKey}` },
+      headers: {
+        Authorization: `Bearer ${config.metrics.userId}:${config.metrics.apiKey}`,
+      },
     })
       .then((response) => {
         if (!response.ok) {
@@ -120,7 +174,6 @@ class Metrics {
         console.error("Error pushing metrics:", error);
       });
   }
-
 }
 
 const metrics = new Metrics();
