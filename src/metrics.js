@@ -1,4 +1,4 @@
-const config = require("./config.json");
+const config = require("./config.js");
 const os = require("os");
 
 function getCpuUsagePercentage() {
@@ -19,6 +19,16 @@ class Metrics {
     this.postRequests = 0;
     this.deleteRequests = 0;
     this.getRequests = 0;
+    this.activeUsers = new Set();
+    this.authenticationSuccesses = 0;
+    this.authenticationFailures = 0;
+
+    const activeUsersTimer = setInterval(() => {
+      // Report on Active Users
+      this.sendMetricToGrafana("user", { metric: "active" }, { total: this.activeUsers.size });
+      this.activeUsers.clear();
+    }, 30000);
+    activeUsersTimer.unref();
 
     // This will periodically sent metrics to Grafana
     const timer = setInterval(() => {
@@ -32,6 +42,10 @@ class Metrics {
       this.sendMetricToGrafana("request", { method: "post" }, { total: this.postRequests });
       this.sendMetricToGrafana("request", { method: "get" }, { total: this.getRequests });
       this.sendMetricToGrafana("request", { method: "delete" }, { total: this.deleteRequests });
+
+      // Report on Authentication Requests
+      this.sendMetricToGrafana("auth", { success: true }, { total: this.authenticationSuccesses });
+      this.sendMetricToGrafana("auth", { success: false }, { total: this.authenticationSuccesses });
     }, 10000);
     timer.unref();
   }
@@ -48,6 +62,16 @@ class Metrics {
         this.incrementDeleteRequests();
       } else if (req.method === "GET") {
         this.incrementGetRequests();
+      }
+      next();
+    };
+  }
+
+  get activeUserTracker() {
+    /** @type {(req: import('express').Request, res: import('express').Response, next: import('express').NextFunction)} */
+    return (req, res, next) => {
+      if (req.user) {
+        this.activeUsers.add(req.user.id);
       }
       next();
     };
