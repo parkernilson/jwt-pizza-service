@@ -23,6 +23,9 @@ class Metrics {
     this.activeUsers = new Set();
     this.authenticationSuccesses = 0;
     this.authenticationFailures = 0;
+    this.creationFailures = 0;
+    this.pizzasSold = 0;
+    this.revenue = 0;
 
     const activeUsersTimer = setInterval(() => {
       // Report on Active Users
@@ -83,6 +86,23 @@ class Metrics {
         { success: false },
         { total: this.authenticationSuccesses }
       );
+
+      // Report on Pizza Statistics
+      this.sendMetricToGrafana(
+        "pizza",
+        { metric: "sold" },
+        { total: this.pizzasSold }
+      );
+      this.sendMetricToGrafana(
+        "pizza",
+        { metric: "revenue" },
+        { total: this.revenue }
+      );
+      this.sendMetricToGrafana(
+        "pizza",
+        { metric: "creation", success: false },
+        { total: this.creationFailures }
+      );
     }, 10000);
     timer.unref();
   }
@@ -138,6 +158,18 @@ class Metrics {
 
   incrementPutRequests() {
     this.putRequests++;
+  }
+
+  incrementCreationFailures() {
+    this.creationFailures++;
+  }
+
+  incrementPizzasSold(count) {
+    this.pizzasSold += count;
+  }
+
+  addRevenue(amount) {
+    this.revenue += amount;
   }
 
   /**
