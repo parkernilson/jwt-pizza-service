@@ -3,7 +3,8 @@ const config = require('../config.js');
 const { Role, DB } = require('../database/database.js');
 const { authRouter } = require('./authRouter.js');
 const { asyncHandler, StatusCodeError } = require('../endpointHelper.js');
-const metrics = require('../metrics.js');
+const metrics = require('../metrics/metrics.js');
+const { getDurationInMs } = require('../metrics/utils/timing.js');
 
 const orderRouter = express.Router();
 
@@ -80,11 +81,18 @@ orderRouter.post(
   asyncHandler(async (req, res) => {
     const orderReq = req.body;
     const order = await DB.addDinerOrder(req.user, orderReq);
+    
+    const start = process.hrtime();
+
     const r = await fetch(`${config.factory.url}/api/order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${config.factory.apiKey}` },
       body: JSON.stringify({ diner: { id: req.user.id, name: req.user.name, email: req.user.email }, order }),
     });
+
+    const duration = getDurationInMs(start);
+    metrics.reportPizzaCreationLatency(duration);
+
     const j = await r.json();
     if (r.ok) {
       const revenueGenerated = order.items.reduce((acc, item) => acc + item.price, 0);
