@@ -35,7 +35,6 @@ class Metrics {
     }, 10000);
     activeUsersTimer.unref();
 
-    // This will periodically sent metrics to Grafana
     const timer = setInterval(() => {
       // Report on CPU Usage
       const cpuUsagePercentage = getCpuUsagePercentage();
