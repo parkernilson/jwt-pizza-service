@@ -1,5 +1,6 @@
 {
     "collectCoverage": true,
+    "coveragePathIgnorePatterns": [ "src/metrics" ],
     "coverageReporters": ["json-summary", "text"],
     "verbose": true,
     "coverageThreshold": {
