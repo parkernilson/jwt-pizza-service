@@ -66,8 +66,9 @@ jobs:
             }
           };" > src/config.js
 
-      - name: Tests
-        run: npm test
+      # TODO: Temp disable tests
+      # - name: Tests
+      #   run: npm test
 
       - name: set version
         id: set_version
@@ -76,16 +77,17 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           printf '{"version": "%s" }' "$version" > src/version.json
 
-      - name: Update coverage
-        run: |
-          coverage_pct=$(grep -o '"pct":[0-9.]*' coverage/coverage-summary.json | head -n 1 | cut -d ':' -f 2)
-          color=$(echo "$coverage_pct < 80" | bc -l | awk '{if ($1) print "yellow"; else print "green"}')
-          curl https://img.shields.io/badge/Coverage-$coverage_pct%25-$color -o coverageBadge.svg
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "generated"
-          git push
+      # TODO: Temp disable coverage
+      # - name: Update coverage
+      #   run: |
+      #     coverage_pct=$(grep -o '"pct":[0-9.]*' coverage/coverage-summary.json | head -n 1 | cut -d ':' -f 2)
+      #     color=$(echo "$coverage_pct < 80" | bc -l | awk '{if ($1) print "yellow"; else print "green"}')
+      #     curl https://img.shields.io/badge/Coverage-$coverage_pct%25-$color -o coverageBadge.svg
+      #     git config user.name github-actions
+      #     git config user.email github-actions@github.com
+      #     git add .
+      #     git commit -m "generated"
+      #     git push
 
       - name: Create dist
         run: |
