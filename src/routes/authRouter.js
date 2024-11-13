@@ -88,8 +88,9 @@ authRouter.put(
       const auth = await setAuth(user);
       metrics.incrementSuccessfulAuthentications();
       return res.json({ user: user, token: auth });
-    } catch {
+    } catch(e) {
       metrics.incrementFailedAuthentications();
+      throw e;
     }
   })
 );
