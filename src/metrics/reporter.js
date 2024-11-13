@@ -98,6 +98,10 @@ class MetricsReporter {
    * @param {{[metricName: string | number]}} metrics
    */
   sendMetricToGrafana(metricPrefix, tags, metrics) {
+    if (process.env.NODE_ENV === "test") {
+      return;
+    }
+
     tags.source = tags.source || config.metrics.source;
 
     const metric = `${metricPrefix},${Object.entries(tags)

@@ -16,6 +16,12 @@ class Metrics {
     this.pizzasSold = 0;
     this.revenue = 0;
 
+    if (process.env.NODE_ENV !== 'test') {
+      this.startReporting();
+    }
+  }
+
+  startReporting() {
     const timer = setInterval(() => {
       this.reporter.reportSystemUsage();
 
