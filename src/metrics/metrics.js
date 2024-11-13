@@ -9,7 +9,7 @@ class Metrics {
     this.deleteRequests = 0;
     this.getRequests = 0;
     this.putRequests = 0;
-    this.activeUsers = new Set();
+    this.activeUsers = {};
     this.authenticationSuccesses = 0;
     this.authenticationFailures = 0;
     this.creationFailures = 0;
@@ -47,10 +47,19 @@ class Metrics {
       )
 
       // Report active users
-      this.reporter.reportActiveUsers(this.activeUsers.size);
-      this.activeUsers.clear();
+      this.reporter.reportActiveUsers(Object.keys(this.activeUsers).length);
+      this.clearInactiveUsers();
     }, 10000);
     timer.unref();
+  }
+
+  clearInactiveUsers() {
+    const now = Date.now();
+    Object.keys(this.activeUsers).forEach((key) => {
+      if (now - this.activeUsers[key] > 30000) {
+        delete this.activeUsers[key];
+      }
+    });
   }
 
   incrementPostRequests() {
@@ -129,7 +138,7 @@ class Metrics {
     /** @type {(req: import('express').Request, res: import('express').Response, next: import('express').NextFunction)} */
     return (req, res, next) => {
       if (req.user) {
-        this.activeUsers.add(req.user.id);
+        this.activeUsers[req.user.id] = Date.now();
       }
       next();
     };
