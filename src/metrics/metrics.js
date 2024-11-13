@@ -107,7 +107,7 @@ class Metrics {
       const originalEnd = res.end;
       res.end = (...args) => {
         const duration = getDurationInMs(start);
-        const path = req.route ? req.route.path : req.url;
+        const path = req.baseUrl + (req.route ? req.route.path : req.path);
 
         this.incrementRequestCount(req.method);
 
