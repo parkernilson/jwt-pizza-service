@@ -5,8 +5,7 @@ const franchiseRouter = require('./routes/franchiseRouter.js');
 const version = require('./version.json');
 const config = require('./config.js');
 const metrics = require('./metrics/metrics.js');
-const Logger = require('./logging/logger.js');
-const logger = new Logger(config);
+const logger = require('./logging/logger.js');
 
 const app = express();
 app.use(metrics.requestMetricsTracker);
