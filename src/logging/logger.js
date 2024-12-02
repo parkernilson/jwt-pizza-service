@@ -70,6 +70,7 @@ class Logger {
           event: event,
         },
       });
+      if (!res) return;
       if (!res.ok) {
         console.log('Failed to send log to factory');
       }
@@ -92,6 +93,7 @@ class Logger {
             Authorization: `Bearer ${this.config.logging.userId}:${this.config.logging.apiKey}`,
           },
         });
+        if (!res) return;
         if (!res.ok) {
           console.log('Failed to send log to Grafana');
         }
